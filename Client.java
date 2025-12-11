@@ -45,14 +45,28 @@ public class Client {
 
             // Create request string
             String request = String.format("%.2f,%.2f", base, exponent);
+
+            // Record start time for RTT measurement
+            long startTime = System.nanoTime();
+
+            // Send request
             sendRequest(writer, request);
 
             // Receive response from server
             String response = receiveResponse(reader);
+
+            // Record end time for RTT measurement
+            long endTime = System.nanoTime();
+
+            // Calculate round-trip time in milliseconds
+            double rtt = (endTime - startTime) / 1000000.0;
+
             if (response.startsWith("ERROR")) {
                 System.out.println("Server Error: " + response);
             } else {
                 displayResult(base, exponent, response);
+                // Display RTT
+                System.out.printf("Round-Trip Time: %.4f ms %n", rtt);
             }
         }
         System.out.println("Disconnecting from server...");
